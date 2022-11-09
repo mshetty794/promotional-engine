@@ -97,4 +97,14 @@ public class PromotionalEngineTest {
         assertEquals(310.0, checkoutPrice);
     }
 
+    @Test
+    public void getCartPriceWithoutPromotionalApplied() {
+        Map<String, Integer> orderDetails = new HashMap<>();
+        orderDetails.put("A", 3);
+        orderDetails.put("B", 2);
+        cartDetails.setOrderedItems(orderDetails);
+        Double checkoutPrice = promotionalEngine.getCartPriceWithoutPromotional(cartDetails);
+        assertEquals(110.0, checkoutPrice);
+    }
+
 }
