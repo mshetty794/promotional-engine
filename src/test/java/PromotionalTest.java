@@ -56,7 +56,7 @@ public class PromotionalTest {
     public void testIsApplicableOnSinglePromotionalFalse() {
         Promotional promotion = new SingleProductPromotional("B", 45, 2);
         Map<String, Integer> orderDetails = new HashMap<>();
-        orderDetails.put("B", 3);
+        orderDetails.put("B", 1);
         cartDetails.setOrderedItems(orderDetails);
         assertFalse(promotion.isApplicable(cartDetails));
     }
@@ -83,6 +83,6 @@ public class PromotionalTest {
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("C", 1);
         cartDetails.setOrderedItems(orderDetails);
-        assertTrue(promotion.isApplicable(cartDetails));
+        assertFalse(promotion.isApplicable(cartDetails));
     }
 }
