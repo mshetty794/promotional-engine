@@ -3,10 +3,11 @@ package com.promotional;
 import com.dto.Cart;
 import com.dto.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class CombinedProductPromotional implements Promotional{
+public class CombinedProductPromotional implements Promotional {
 
     private List<String> productNames;
     private double promotionalPrice;
@@ -18,6 +19,14 @@ public class CombinedProductPromotional implements Promotional{
 
     @Override
     public boolean isApplicable(Cart cartDetails) {
+        List<String> promotional = new ArrayList<>();
+        promotional.addAll(productNames);
+        cartDetails.getOrderedItems().forEach((productName, quantity) -> {
+            promotional.remove(productName);
+        });
+        if (promotional.size() == 0) {
+            return true;
+        }
         return false;
     }
 
