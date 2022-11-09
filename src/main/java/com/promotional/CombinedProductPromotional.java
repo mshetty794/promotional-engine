@@ -6,6 +6,7 @@ import com.dto.Product;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CombinedProductPromotional implements Promotional {
 
@@ -19,12 +20,17 @@ public class CombinedProductPromotional implements Promotional {
 
     @Override
     public boolean isApplicable(Cart cartDetails) {
-        List<String> promotional = new ArrayList<>();
-        promotional.addAll(productNames);
+        return checkIfApplicable(cartDetails);
+    }
+
+    private boolean checkIfApplicable(Cart cartDetails) {
+        List<String> clonedPromotionalInfo = new ArrayList<>();
+        clonedPromotionalInfo.addAll(productNames);
         cartDetails.getOrderedItems().forEach((productName, quantity) -> {
-            promotional.remove(productName);
+            clonedPromotionalInfo.remove(productName);
         });
-        if (promotional.size() == 0) {
+
+        if (clonedPromotionalInfo.size() == 0) {
             return true;
         }
         return false;
@@ -32,6 +38,62 @@ public class CombinedProductPromotional implements Promotional {
 
     @Override
     public double getDiscountPrice(Cart cartDetails, Map<String, Product> productCatalogue) {
-        return 0.0;
+
+        double price = 0.0;
+        int quantity = 0;
+
+        List<String> clonedPromotionalInfo = new ArrayList<>();
+        clonedPromotionalInfo.addAll(productNames);
+        Map<String, Integer> clonedCartItems = getClonesCartDetails(cartDetails);
+        List<String> productList = getProductList(clonedCartItems, new ArrayList<>());
+        return getPriceAfterApplyingPromotional(productCatalogue, price, quantity, clonedPromotionalInfo, productList);
     }
+
+    private double getPriceAfterApplyingPromotional(Map<String, Product> productCatalogue, double price, int quantity, List<String> clonedPromotionalInfo, List<String> productList) {
+        int index = 0;
+        for (String product : productList) {
+            index += 1;
+            if (clonedPromotionalInfo.contains(product)) {
+                clonedPromotionalInfo.remove(product);
+                price += productCatalogue.get(product).getPrice();
+            }
+
+            if (index == productList.size() && (index % productNames.size() != 0)) {
+                price -= productCatalogue.get(product).getPrice();
+            }
+
+            if (clonedPromotionalInfo.size() == 0) {
+                quantity += 1;
+                clonedPromotionalInfo.addAll(productNames);
+            }
+        }
+        return price - (quantity * promotionalPrice);
+    }
+
+    private Map<String, Integer> getClonesCartDetails(Cart cartDetails) {
+        Map<String, Integer> clonedCartItems = new ConcurrentHashMap<>();
+        cartDetails.getOrderedItems().forEach((productId, quantities) -> {
+            if (productNames.contains(productId)) {
+                clonedCartItems.put(productId, quantities);
+            }
+        });
+        return clonedCartItems;
+    }
+
+    private List<String> getProductList(Map<String, Integer> cartItems, ArrayList<String> productList) {
+
+        if (cartItems.isEmpty()) {
+            return productList;
+        }
+        cartItems.forEach((productId, quantities) -> {
+            if (cartItems.get(productId) - 1 == 0) {
+                cartItems.remove(productId);
+            } else {
+                cartItems.put(productId, (cartItems.get(productId) - 1));
+            }
+            productList.add(productId);
+        });
+        return getProductList(cartItems, productList);
+    }
+
 }
