@@ -27,7 +27,7 @@ public class PromotionalEngineImpl implements PromotionalEngine {
     }
 
     private double applyPromotional(Cart cartDetails, Promotional promotional) {
-        return promotional.getDiscountPrice(cartDetails);
+        return promotional.getDiscountPrice(cartDetails, productCatalogue);
     }
 
 

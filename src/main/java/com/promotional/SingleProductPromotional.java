@@ -1,6 +1,7 @@
 package com.promotional;
 
 import com.dto.Cart;
+import com.dto.Product;
 
 import java.util.Map;
 
@@ -27,7 +28,8 @@ public class SingleProductPromotional implements Promotional {
     }
 
     @Override
-    public double getDiscountPrice(Cart cartDetails) {
-        return 0.0;
+    public double getDiscountPrice(Cart cartDetails, Map<String, Product> productCatalogue) {
+        double multiplier = cartDetails.getOrderedItems().get(productName) / quantity;
+        return ( quantity * multiplier * productCatalogue.get(productName).getPrice() ) - multiplier * promotionalPrice;
     }
 }

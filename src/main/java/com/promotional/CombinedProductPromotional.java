@@ -1,8 +1,10 @@
 package com.promotional;
 
 import com.dto.Cart;
+import com.dto.Product;
 
 import java.util.List;
+import java.util.Map;
 
 public class CombinedProductPromotional implements Promotional{
 
@@ -20,7 +22,7 @@ public class CombinedProductPromotional implements Promotional{
     }
 
     @Override
-    public double getDiscountPrice(Cart cartDetails) {
+    public double getDiscountPrice(Cart cartDetails, Map<String, Product> productCatalogue) {
         return 0.0;
     }
 }
