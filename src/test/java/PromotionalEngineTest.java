@@ -3,6 +3,7 @@ import com.dto.Product;
 import com.dto.PromotionalDetails;
 import com.engine.PromotionalEngine;
 import com.engine.PromotionalEngineImpl;
+import com.promotional.CombinedProductPromotional;
 import com.promotional.Promotional;
 import com.promotional.SingleProductPromotional;
 import org.junit.jupiter.api.AfterAll;
@@ -19,9 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PromotionalEngineTest {
 
     private static PromotionalEngine promotionalEngine;
-    private static List<PromotionalDetails> promotions;
     private static Map<String, Product> productCatalogue;
-    private static Cart cartDetails;
 
     @BeforeAll
     public static void setup() {
@@ -33,10 +32,6 @@ public class PromotionalEngineTest {
         productCatalogue.put("D", new Product("A",15.0));
     }
 
-    @AfterAll
-    public static void teardown() {
-        cartDetails.getOrderedItems().clear();
-    }
 
     @Test
     public void testMultiplePromotionalAppliedOnCart() {
@@ -46,6 +41,17 @@ public class PromotionalEngineTest {
         orderDetails.put("B", 5);
         orderDetails.put("C", 1);
         orderDetails.put("D", 1);
+        List<Promotional> applicablePromotional = new ArrayList<>();
+        Promotional individualProductPromotionalA = new SingleProductPromotional("A",130.0,3);
+        Promotional individualProductPromotionalB = new SingleProductPromotional("B",45.0,2);
+        List<String> product = new ArrayList<>();
+        product.add("C");
+        product.add("D");
+        Promotional bundlePromotional = new CombinedProductPromotional(product, 30.0);
+        applicablePromotional.add(bundlePromotional);
+        applicablePromotional.add(individualProductPromotionalA);
+        applicablePromotional.add(individualProductPromotionalB);
+        cartDetails.setApplicablePromotional(applicablePromotional);
         cartDetails.setOrderedItems(orderDetails);
         double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
         assertEquals(280.0, checkoutPrice);
@@ -92,6 +98,13 @@ public class PromotionalEngineTest {
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("C", 2);
         orderDetails.put("D", 2);
+        List<String> product = new ArrayList<>();
+        product.add("C");
+        product.add("D");
+        List<Promotional> applicablePromotional = new ArrayList<>();
+        Promotional bundlePromotional = new CombinedProductPromotional(product, 30.0);
+        applicablePromotional.add(bundlePromotional);
+        cartDetails.setApplicablePromotional(applicablePromotional);
         cartDetails.setOrderedItems(orderDetails);
         double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
         assertEquals(60.0, checkoutPrice);
@@ -116,6 +129,10 @@ public class PromotionalEngineTest {
         Cart cartDetails = new  Cart();
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("A", 7);
+        List<Promotional> applicablePromotional = new ArrayList<>();
+        Promotional individualProductPromotional = new SingleProductPromotional("A",130.0,3);
+        applicablePromotional.add(individualProductPromotional);
+        cartDetails.setApplicablePromotional(applicablePromotional);
         cartDetails.setOrderedItems(orderDetails);
         Double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
         assertEquals(310.0, checkoutPrice);
@@ -125,11 +142,17 @@ public class PromotionalEngineTest {
     public void getCartPriceWithoutPromotionalApplied() {
         Cart cartDetails = new  Cart();
         Map<String, Integer> orderDetails = new HashMap<>();
-        orderDetails.put("A", 3);
-        orderDetails.put("B", 2);
+        orderDetails.put("A", 1);
+        orderDetails.put("B", 1);
+        List<Promotional> applicablePromotional = new ArrayList<>();
+        Promotional individualProductPromotionalA = new SingleProductPromotional("A",130.0,3);
+        Promotional individualProductPromotionalB = new SingleProductPromotional("B",45.0,2);
+        applicablePromotional.add(individualProductPromotionalA);
+        applicablePromotional.add(individualProductPromotionalB);
+        cartDetails.setApplicablePromotional(applicablePromotional);
         cartDetails.setOrderedItems(orderDetails);
         Double checkoutPrice = promotionalEngine.getCheckOutPrice(cartDetails);
-        assertEquals(110.0, checkoutPrice);
+        assertEquals(80.0, checkoutPrice);
     }
 
 }
