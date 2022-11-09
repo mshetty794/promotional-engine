@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PromotionalEngineImplTest {
+public class PromotionalEngineTest {
 
     private static PromotionalEngine promotionalEngine;
     private static List<PromotionalDetails> promotions;
