@@ -2,6 +2,7 @@ package com.engine;
 
 import com.dto.Cart;
 import com.dto.Product;
+import com.promotional.Promotional;
 
 import java.util.Map;
 
@@ -15,7 +16,18 @@ public class PromotionalEngineImpl implements PromotionalEngine {
 
     @Override
     public double getCartPriceWithPromotionalApplied(Cart cartDetails) {
-        return 0.0;
+        cartDetails.setCheckOutAmount(getCheckOutPrice(cartDetails));
+        for (Promotional promotional : cartDetails.getApplicablePromotional()) {
+            if (promotional.isApplicable(cartDetails)) {
+                double discountedPrice = applyPromotional(cartDetails, promotional);
+                cartDetails.setPromotionalAmount(cartDetails.getPromotionalAmount() + discountedPrice);
+            }
+        }
+        return cartDetails.getCheckOutAmount() - cartDetails.getPromotionalAmount();
+    }
+
+    private double applyPromotional(Cart cartDetails, Promotional promotional) {
+        return promotional.getDiscountPrice(cartDetails);
     }
 
 

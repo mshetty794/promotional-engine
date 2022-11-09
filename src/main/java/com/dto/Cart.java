@@ -1,5 +1,6 @@
 package com.dto;
 
+import com.promotional.Promotional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,8 @@ public class Cart {
 
     Map<String,Integer> orderedItems = new HashMap<>();
     private double checkOutAmount;
-    private double promotionalAppliedAmount;
+    private double promotionalAmount;
     private double payableAmount;
-    List<PromotionalDetails> applicablePromotional;
+    List<Promotional> applicablePromotional;
 
 }
