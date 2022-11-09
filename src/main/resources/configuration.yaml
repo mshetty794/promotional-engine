@@ -1,0 +1,20 @@
+products:
+  - name: A
+    price: 50.0
+  - name: B
+    price: 30.0
+  - name: C
+    price: 20.0
+  - name: D
+    price: 15.0
+
+promotionals:
+  - products: ["A"]
+    quantity: 3
+    promotionalPrice: 130.0
+  - products: ["B"]
+    quantity: 2
+    promotionalPrice: 45.0
+  - products: ["C", "D"]
+    quantity: 1
+    promotionalPrice: 30.0

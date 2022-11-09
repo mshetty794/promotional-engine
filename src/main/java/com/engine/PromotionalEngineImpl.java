@@ -1,4 +1,8 @@
 package com.engine;
 
-public class PromotionalEngineImpl {
+public class PromotionalEngineImpl implements PromotionalEngine {
+    @Override
+    public double getCurrentCartPrice() {
+        return 0;
+    }
 }
