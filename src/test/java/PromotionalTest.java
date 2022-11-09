@@ -23,14 +23,14 @@ public class PromotionalTest {
     private static PromotionalEngine promotionalEngine;
     private static List<PromotionalDetails> promotions;
     private static Cart cartDetails;
-    private static HashMap<Object, Object> productCatalogue;
+    private static Map<String, Product> productCatalogue;
 
     @BeforeAll
     public static void setup() {
-        promotionalEngine = new PromotionalEngineImpl();
-        //promotions = PromotionUtil.setupPromotions();
-        promotionalEngine = new PromotionalEngineImpl();
+
         productCatalogue = new HashMap<>();
+        promotionalEngine = new PromotionalEngineImpl(productCatalogue);
+        //promotions = PromotionUtil.setupPromotions();
         productCatalogue.put("A", new Product("A", 50.0));
         productCatalogue.put("B", new Product("A", 30.0));
         productCatalogue.put("C", new Product("A", 20.0));

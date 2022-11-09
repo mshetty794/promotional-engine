@@ -20,7 +20,7 @@ public class CombinedProductPromotional implements Promotional{
     }
 
     @Override
-    public double getDiscountPrice() {
+    public double getDiscountPrice(Cart cartDetails) {
         return 0.0;
     }
 }

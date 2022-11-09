@@ -17,13 +17,13 @@ public class PromotionalEngineTest {
 
     private static PromotionalEngine promotionalEngine;
     private static List<PromotionalDetails> promotions;
-    private static HashMap<Object, Object> productCatalogue;
+    private static Map<String, Product> productCatalogue;
     private static Cart cartDetails;
 
     @BeforeAll
     public static void setup() {
-        promotionalEngine = new PromotionalEngineImpl();
         productCatalogue = new HashMap<>();
+        promotionalEngine = new PromotionalEngineImpl(productCatalogue);
         productCatalogue.put("A", new Product("A",50.0));
         productCatalogue.put("B", new Product("A",30.0));
         productCatalogue.put("C", new Product("A",20.0));
@@ -44,7 +44,7 @@ public class PromotionalEngineTest {
         orderDetails.put("C", 1);
         orderDetails.put("D", 1);
         cartDetails.setOrderedItems(orderDetails);
-        double checkoutPrice = promotionalEngine.getCheckOutPrice(cartDetails);
+        double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
         assertEquals(280.0, checkoutPrice);
     }
 
@@ -55,7 +55,7 @@ public class PromotionalEngineTest {
         orderDetails.put("B",1);
         orderDetails.put("D",1);
         cartDetails.setOrderedItems(orderDetails);
-        double checkoutPrice = promotionalEngine.getCheckOutPrice(cartDetails);
+        double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
         assertEquals(95.0, checkoutPrice);
     }
 
@@ -65,7 +65,7 @@ public class PromotionalEngineTest {
         orderDetails.put("A", 5);
         orderDetails.put("B", 5);
         cartDetails.setOrderedItems(orderDetails);
-        double checkoutPrice = promotionalEngine.getCheckOutPrice(cartDetails);
+        double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
         assertEquals(370.0, checkoutPrice);
     }
 
@@ -75,7 +75,7 @@ public class PromotionalEngineTest {
         orderDetails.put("C", 2);
         orderDetails.put("D", 2);
         cartDetails.setOrderedItems(orderDetails);
-        double checkoutPrice = promotionalEngine.getCheckOutPrice(cartDetails);
+        double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
         assertEquals(60.0, checkoutPrice);
     }
 
@@ -84,7 +84,7 @@ public class PromotionalEngineTest {
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("A", 6);
         cartDetails.setOrderedItems(orderDetails);
-        double checkoutPrice = promotionalEngine.getCheckOutPrice(cartDetails);
+        double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
         assertEquals(260.0, checkoutPrice);
     }
 
@@ -93,7 +93,7 @@ public class PromotionalEngineTest {
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("A", 7);
         cartDetails.setOrderedItems(orderDetails);
-        Double checkoutPrice = promotionalEngine.getCheckOutPrice(cartDetails);
+        Double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
         assertEquals(310.0, checkoutPrice);
     }
 
@@ -103,7 +103,7 @@ public class PromotionalEngineTest {
         orderDetails.put("A", 3);
         orderDetails.put("B", 2);
         cartDetails.setOrderedItems(orderDetails);
-        Double checkoutPrice = promotionalEngine.getCartPriceWithoutPromotional(cartDetails);
+        Double checkoutPrice = promotionalEngine.getCheckOutPrice(cartDetails);
         assertEquals(110.0, checkoutPrice);
     }
 

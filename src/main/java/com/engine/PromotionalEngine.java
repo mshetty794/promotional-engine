@@ -4,6 +4,6 @@ import com.dto.Cart;
 
 public interface PromotionalEngine {
 
-    double getCartPriceWithoutPromotional(Cart cartDetails);
+    double getCartPriceWithPromotionalApplied(Cart cartDetails);
     double getCheckOutPrice(Cart cartDetails);
 }
