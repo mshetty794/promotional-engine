@@ -34,25 +34,45 @@ public class PromotionalEngineTest {
     @Test
     public void testMultiplePromotionalAppliedOnCart() {
         Cart cartDetails = new  Cart();
+        Map<String, Integer> orderDetails = addProductToCartForMultiplePromotional();
+        List<Promotional> applicablePromotional = getSingleAndCombinedProductPromotionalDetails();
+        cartDetails.setApplicablePromotional(applicablePromotional);
+        cartDetails.setOrderedItems(orderDetails);
+        double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
+        assertEquals(280.0, checkoutPrice);
+    }
+
+    private List<Promotional> getSingleAndCombinedProductPromotionalDetails() {
+        List<Promotional> applicablePromotional = new ArrayList<>();
+        Promotional individualProductPromotionalA = getSinglePromotionalForProductA();
+        Promotional individualProductPromotionalB = getSinglePromotionalForProductB();
+        Promotional bundlePromotional = getCombinedPromotionalForProduct();
+        applicablePromotional.add(individualProductPromotionalA);
+        applicablePromotional.add(individualProductPromotionalB);
+        applicablePromotional.add(bundlePromotional);
+        return applicablePromotional;
+    }
+
+    private Promotional getSinglePromotionalForProductA() {
+        return new SingleProductPromotional("A",130.0,3);
+    }
+    private Promotional getSinglePromotionalForProductB() {
+        return new SingleProductPromotional("B",45.0,2);
+    }
+    private Promotional getCombinedPromotionalForProduct() {
+        List<String> product = new ArrayList<>();
+        product.add("C");
+        product.add("D");
+        return new CombinedProductPromotional(product, 30.0);
+    }
+
+    private Map<String, Integer> addProductToCartForMultiplePromotional() {
         Map<String,Integer> orderDetails = new HashMap<>();
         orderDetails.put("A", 3);
         orderDetails.put("B", 5);
         orderDetails.put("C", 1);
         orderDetails.put("D", 1);
-        List<Promotional> applicablePromotional = new ArrayList<>();
-        Promotional individualProductPromotionalA = new SingleProductPromotional("A",130.0,3);
-        Promotional individualProductPromotionalB = new SingleProductPromotional("B",45.0,2);
-        List<String> product = new ArrayList<>();
-        product.add("C");
-        product.add("D");
-        Promotional bundlePromotional = new CombinedProductPromotional(product, 30.0);
-        applicablePromotional.add(bundlePromotional);
-        applicablePromotional.add(individualProductPromotionalA);
-        applicablePromotional.add(individualProductPromotionalB);
-        cartDetails.setApplicablePromotional(applicablePromotional);
-        cartDetails.setOrderedItems(orderDetails);
-        double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
-        assertEquals(280.0, checkoutPrice);
+        return orderDetails;
     }
 
     @Test
@@ -62,11 +82,7 @@ public class PromotionalEngineTest {
         orderDetails.put("A",1);
         orderDetails.put("B",1);
         orderDetails.put("D",1);
-        List<Promotional> applicablePromotional = new ArrayList<>();
-        Promotional individualProductPromotionalA = new SingleProductPromotional("A",130.0,3);
-        Promotional individualProductPromotionalB = new SingleProductPromotional("B",45.0,2);
-        applicablePromotional.add(individualProductPromotionalA);
-        applicablePromotional.add(individualProductPromotionalB);
+        List<Promotional> applicablePromotional = getPromotionalSingleProduct();
         cartDetails.setApplicablePromotional(applicablePromotional);
         cartDetails.setOrderedItems(orderDetails);
         double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
@@ -79,11 +95,7 @@ public class PromotionalEngineTest {
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("A", 5);
         orderDetails.put("B", 5);
-        List<Promotional> applicablePromotional = new ArrayList<>();
-        Promotional individualProductPromotionalA = new SingleProductPromotional("A",130.0,3);
-        Promotional individualProductPromotionalB = new SingleProductPromotional("B",45.0,2);
-        applicablePromotional.add(individualProductPromotionalA);
-        applicablePromotional.add(individualProductPromotionalB);
+        List<Promotional> applicablePromotional = getPromotionalSingleProduct();
         cartDetails.setApplicablePromotional(applicablePromotional);
         cartDetails.setOrderedItems(orderDetails);
         double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
@@ -96,11 +108,8 @@ public class PromotionalEngineTest {
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("C", 2);
         orderDetails.put("D", 2);
-        List<String> product = new ArrayList<>();
-        product.add("C");
-        product.add("D");
         List<Promotional> applicablePromotional = new ArrayList<>();
-        Promotional bundlePromotional = new CombinedProductPromotional(product, 30.0);
+        Promotional bundlePromotional =  getCombinedPromotionalForProduct();
         applicablePromotional.add(bundlePromotional);
         cartDetails.setApplicablePromotional(applicablePromotional);
         cartDetails.setOrderedItems(orderDetails);
@@ -114,7 +123,7 @@ public class PromotionalEngineTest {
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("A", 6);
         List<Promotional> applicablePromotional = new ArrayList<>();
-        Promotional individualProductPromotionalA = new SingleProductPromotional("A",130.0,3);
+        Promotional individualProductPromotionalA = getSinglePromotionalForProductA();
         applicablePromotional.add(individualProductPromotionalA);
         cartDetails.setApplicablePromotional(applicablePromotional);
         cartDetails.setOrderedItems(orderDetails);
@@ -128,7 +137,7 @@ public class PromotionalEngineTest {
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("A", 7);
         List<Promotional> applicablePromotional = new ArrayList<>();
-        Promotional individualProductPromotional = new SingleProductPromotional("A",130.0,3);
+        Promotional individualProductPromotional = getSinglePromotionalForProductA();
         applicablePromotional.add(individualProductPromotional);
         cartDetails.setApplicablePromotional(applicablePromotional);
         cartDetails.setOrderedItems(orderDetails);
@@ -142,15 +151,20 @@ public class PromotionalEngineTest {
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("A", 1);
         orderDetails.put("B", 1);
+        List<Promotional> applicablePromotional = getPromotionalSingleProduct();
+        cartDetails.setApplicablePromotional(applicablePromotional);
+        cartDetails.setOrderedItems(orderDetails);
+        Double checkoutPrice = promotionalEngine.getCheckOutPrice(cartDetails);
+        assertEquals(80.0, checkoutPrice);
+    }
+
+    private List<Promotional> getPromotionalSingleProduct() {
         List<Promotional> applicablePromotional = new ArrayList<>();
         Promotional individualProductPromotionalA = new SingleProductPromotional("A",130.0,3);
         Promotional individualProductPromotionalB = new SingleProductPromotional("B",45.0,2);
         applicablePromotional.add(individualProductPromotionalA);
         applicablePromotional.add(individualProductPromotionalB);
-        cartDetails.setApplicablePromotional(applicablePromotional);
-        cartDetails.setOrderedItems(orderDetails);
-        Double checkoutPrice = promotionalEngine.getCheckOutPrice(cartDetails);
-        assertEquals(80.0, checkoutPrice);
+        return applicablePromotional;
     }
 
 }

@@ -55,16 +55,11 @@ public class CombinedProductPromotional implements Promotional {
             index += 1;
             price += getAggregatedPriceForProduct(productCatalogue, price, clonedPromotionalInfo, product);
             quantity = pairProductCombination(quantity, clonedPromotionalInfo);
-            price = minusPriceOfLastUnpairedProduct(productCatalogue, price, productList, index, product);
+            if (index == productList.size() && (index % productNames.size() != 0)) {
+                price -= productCatalogue.get(product).getPrice();
+            }
         }
         return price - (quantity * promotionalPrice);
-    }
-
-    private double minusPriceOfLastUnpairedProduct(Map<String, Product> productCatalogue, double price, List<String> productList, int index, String product) {
-        if (index == productList.size() && (index % productNames.size() != 0)) {
-            price -= productCatalogue.get(product).getPrice();
-        }
-        return price;
     }
 
     private int pairProductCombination(int quantity, List<String> clonedPromotionalInfo) {
