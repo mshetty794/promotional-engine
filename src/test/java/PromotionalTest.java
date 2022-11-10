@@ -30,7 +30,6 @@ public class PromotionalTest {
 
         productCatalogue = new HashMap<>();
         promotionalEngine = new PromotionalEngineImpl(productCatalogue);
-        //promotions = PromotionUtil.setupPromotions();
         productCatalogue.put("A", new Product("A", 50.0));
         productCatalogue.put("B", new Product("A", 30.0));
         productCatalogue.put("C", new Product("A", 20.0));

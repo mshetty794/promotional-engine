@@ -53,21 +53,34 @@ public class CombinedProductPromotional implements Promotional {
         int index = 0;
         for (String product : productList) {
             index += 1;
-            if (clonedPromotionalInfo.contains(product)) {
-                clonedPromotionalInfo.remove(product);
-                price += productCatalogue.get(product).getPrice();
-            }
-
-            if (index == productList.size() && (index % productNames.size() != 0)) {
-                price -= productCatalogue.get(product).getPrice();
-            }
-
-            if (clonedPromotionalInfo.size() == 0) {
-                quantity += 1;
-                clonedPromotionalInfo.addAll(productNames);
-            }
+            price += getAggregatedPriceForProduct(productCatalogue, price, clonedPromotionalInfo, product);
+            quantity = pairProductCombination(quantity, clonedPromotionalInfo);
+            price = minusPriceOfLastUnpairedProduct(productCatalogue, price, productList, index, product);
         }
         return price - (quantity * promotionalPrice);
+    }
+
+    private double minusPriceOfLastUnpairedProduct(Map<String, Product> productCatalogue, double price, List<String> productList, int index, String product) {
+        if (index == productList.size() && (index % productNames.size() != 0)) {
+            price -= productCatalogue.get(product).getPrice();
+        }
+        return price;
+    }
+
+    private int pairProductCombination(int quantity, List<String> clonedPromotionalInfo) {
+        if (clonedPromotionalInfo.size() == 0) {
+            quantity += 1;
+            clonedPromotionalInfo.addAll(productNames);
+        }
+        return quantity;
+    }
+
+    private double getAggregatedPriceForProduct(Map<String, Product> productCatalogue, double price, List<String> clonedPromotionalInfo, String product) {
+        if (clonedPromotionalInfo.contains(product)) {
+            clonedPromotionalInfo.remove(product);
+            return productCatalogue.get(product).getPrice();
+        }
+        return 0.0;
     }
 
     private Map<String, Integer> getClonesCartDetails(Cart cartDetails) {

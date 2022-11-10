@@ -1,12 +1,10 @@
 import com.dto.Cart;
 import com.dto.Product;
-import com.dto.PromotionalDetails;
 import com.engine.PromotionalEngine;
 import com.engine.PromotionalEngineImpl;
 import com.promotional.CombinedProductPromotional;
 import com.promotional.Promotional;
 import com.promotional.SingleProductPromotional;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
