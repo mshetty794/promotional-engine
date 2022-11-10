@@ -10,8 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CombinedProductPromotional implements Promotional {
 
-    private List<String> productNames;
-    private double promotionalPrice;
+    private final List<String> productNames;
+    private final double promotionalPrice;
 
     public CombinedProductPromotional(List<String> productNames, double promotionalPrice) {
         this.productNames = productNames;
@@ -24,16 +24,9 @@ public class CombinedProductPromotional implements Promotional {
     }
 
     private boolean checkIfApplicable(Cart cartDetails) {
-        List<String> clonedPromotionalInfo = new ArrayList<>();
-        clonedPromotionalInfo.addAll(productNames);
-        cartDetails.getOrderedItems().forEach((productName, quantity) -> {
-            clonedPromotionalInfo.remove(productName);
-        });
-
-        if (clonedPromotionalInfo.size() == 0) {
-            return true;
-        }
-        return false;
+        List<String> clonedPromotionalInfo = new ArrayList<>(productNames);
+        cartDetails.getOrderedItems().forEach((productName, quantity) -> clonedPromotionalInfo.remove(productName));
+        return clonedPromotionalInfo.size() == 0;
     }
 
     @Override
@@ -42,8 +35,7 @@ public class CombinedProductPromotional implements Promotional {
         double price = 0.0;
         int quantity = 0;
 
-        List<String> clonedPromotionalInfo = new ArrayList<>();
-        clonedPromotionalInfo.addAll(productNames);
+        List<String> clonedPromotionalInfo = new ArrayList<>(productNames);
         Map<String, Integer> clonedCartItems = getClonesCartDetails(cartDetails);
         List<String> productList = getProductList(clonedCartItems, new ArrayList<>());
         return getPriceAfterApplyingPromotional(productCatalogue, price, quantity, clonedPromotionalInfo, productList);

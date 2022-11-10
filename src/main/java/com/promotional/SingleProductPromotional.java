@@ -7,9 +7,9 @@ import java.util.Map;
 
 public class SingleProductPromotional implements Promotional {
 
-    private int quantity;
-    private String productName;
-    private double promotionalPrice;
+    private final int quantity;
+    private final String productName;
+    private final double promotionalPrice;
 
     public SingleProductPromotional(String productName, double promotionalPrice, int quantity) {
         this.quantity = quantity;
@@ -29,7 +29,7 @@ public class SingleProductPromotional implements Promotional {
 
     @Override
     public double getDiscountPrice(Cart cartDetails, Map<String, Product> productCatalogue) {
-        double multiplier = cartDetails.getOrderedItems().get(productName) / quantity;
+        int multiplier = cartDetails.getOrderedItems().get(productName) / quantity;
         return ( quantity * multiplier * productCatalogue.get(productName).getPrice() ) - multiplier * promotionalPrice;
     }
 }

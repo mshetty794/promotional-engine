@@ -18,11 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PromotionalEngineTest {
 
     private static PromotionalEngine promotionalEngine;
-    private static Map<String, Product> productCatalogue;
 
     @BeforeAll
     public static void setup() {
-        productCatalogue = new HashMap<>();
+        Map<String, Product> productCatalogue = new HashMap<>();
         promotionalEngine = new PromotionalEngineImpl(productCatalogue);
         productCatalogue.put("A", new Product("A",50.0));
         productCatalogue.put("B", new Product("A",30.0));
@@ -95,11 +94,12 @@ public class PromotionalEngineTest {
         Map<String, Integer> orderDetails = new HashMap<>();
         orderDetails.put("A", 5);
         orderDetails.put("B", 5);
+        orderDetails.put("C", 1);
         List<Promotional> applicablePromotional = getPromotionalSingleProduct();
         cartDetails.setApplicablePromotional(applicablePromotional);
         cartDetails.setOrderedItems(orderDetails);
         double checkoutPrice = promotionalEngine.getCartPriceWithPromotionalApplied(cartDetails);
-        assertEquals(350.0, checkoutPrice);
+        assertEquals(370.0, checkoutPrice);
     }
 
     @Test
